@@ -1,0 +1,8 @@
+pandas
+palmerpenguins
+plotnine
+jupyter
+nbformat
+nbclient
+ipykernel
+pyyaml
