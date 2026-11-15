@@ -1,0 +1,81 @@
+---
+title: "Palmer Penguins Dashboard: Species and Island Distribution"
+format: dashboard
+jupyter: python3
+---
+
+```{python}
+#| label: setup
+#| include: false
+import pandas as pd
+from palmerpenguins import load_penguins
+from plotnine import (ggplot, aes, geom_bar, labs, theme_minimal,
+                      theme, element_text)
+
+penguins = load_penguins()
+penguins["species"] = penguins["species"].astype(str)
+penguins["island"] = penguins["island"].astype(str)
+
+top_species = penguins["species"].value_counts().idxmax()
+top_island = penguins["island"].value_counts().idxmax()
+```
+
+## Row {height=20%}
+
+```{python}
+#| content: valuebox
+#| title: "Total Penguins Observed"
+dict(icon="bar-chart", color="primary", value=len(penguins))
+```
+
+```{python}
+#| content: valuebox
+#| title: "Most Observed Species"
+dict(icon="star", color="success", value=top_species)
+```
+
+```{python}
+#| content: valuebox
+#| title: "Island with Most Penguins"
+dict(icon="geo-alt", color="info", value=top_island)
+```
+
+## Row {height=80%}
+
+### Species Distribution
+
+```{python}
+(
+    ggplot(penguins, aes(x="species", fill="species"))
+    + geom_bar()
+    + labs(
+        title="Number of Penguin Observations by Species",
+        x="Species",
+        y="Number of Penguins",
+        fill="Species",
+    )
+    + theme_minimal()
+    + theme(plot_title=element_text(size=12, weight="bold"))
+)
+```
+
+**Interpretation:** Adelie is the most observed species with 152 penguins, followed by Gentoo (124) and Chinstrap (68). Adelie makes up nearly half of the 344 observations, so the dataset is not evenly balanced across species.
+
+### Island Distribution
+
+```{python}
+(
+    ggplot(penguins, aes(x="island", fill="species"))
+    + geom_bar()
+    + labs(
+        title="Penguin Counts by Island and Species",
+        x="Island",
+        y="Number of Penguins",
+        fill="Species",
+    )
+    + theme_minimal()
+    + theme(plot_title=element_text(size=12, weight="bold"))
+)
+```
+
+**Interpretation:** Biscoe has the most penguins (168), followed by Dream (124) and Torgersen (52). Adelie penguins live on all three islands, while Gentoo are found only on Biscoe and Chinstrap only on Dream.
